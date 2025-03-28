@@ -1,21 +1,36 @@
 import { useState } from "react"
 
 function App(){
+   
+    const [nome, setNome]= useState('Ronaldo')
+  const [idade, setIdade] = useState (18)
+  const [time, setTime] = useState (18)
+  const [pi] = useState(3.14)
   
-  const [nome, setNome]= useState('Ronaldo')
+//var idade = 18;
+//let time = 'Corinthians';
+//const pi = 3.14;
 
-  const Formulario = ()=>{
+   const Formulario = (props)=>{
+    const[valor, setValor] = useState()
+
     return(
     <div>
   <input 
+    placeholder={props.sombra}
     className="nome"
-    onChange={(e)=>{setNome(e.target.value)}}
+    onChange={(e)=>{setValor(e.target.value)}}
     type="text" />
 
     <button
     
     className="botao"
-    onClick={()=>{alert(nome)}}
+    onClick={()=>{
+      if(valor.lenght > 0)
+        alert(valor);
+      else
+      alert(props.nome + 'idade é ' + props.idade);
+    }}
     >
 
       CLIQUE AQUI
@@ -28,12 +43,13 @@ function App(){
     <div>
       <h3>Pizzaria 2E</h3>
 
-  <Formulario>
-  </Formulario>   
-  <Formulario>
-  </Formulario>    <Formulario>
-  </Formulario>    <Formulario>
-  </Formulario>     
+  <Formulario nome="Ricado "  
+      idade = {45} 
+   sombra="Digita nome.."/>   
+  <Formulario nome="Maria" sombra="Digita sua idade.."/>
+     <Formulario nome="Tomas" sombra="Digita seu time.."/>
+      <Formulario nome="Antonieta" sombra="valor de pi.."/>
+      
 
     </div>
   )
