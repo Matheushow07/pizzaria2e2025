@@ -1,25 +1,40 @@
 // ferramenta de consumo de rotas
 import axios from 'axios'
-// Hooks do react para controlar renderizaçao e estados
 import { useEffect, useState } from 'react';
+import { useProdutos } from '../../context/ProdutosContext';
  
 const Produtos = () => {
-    // Estadi para guardar a lista de pizzas
-    const [pizzas,setPizzas] = useState(['Calabresa', 'Muçarela', 'Baina']);
-    //Consumir as pizzas da rota backend
-    axios.get("http://172.19.0.49/pizzariaoficial/api/v1/produto")
-    .then(Response => setPizzas(Response.data.data))
-    .catch(error => console.log(error))
+    const [pizzas,setPizzas] = useState([]);
+    const { reload } = useProdutos();
     
-    // Mapeamento das pizzas da lista (iteração)
-    const listaPizzas = pizzas.map(pizza =>
-        <li key={pizza.id}>{pizza.nome}</li>);
+    useEffect(() => {
+        const fetchProdutos = async () => {
+            try {
+                const response = await axios.get("/api/v1/produto");
+                const produtos = response.data?.data || response.data || [];
+                setPizzas(produtos);
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                setPizzas([]);
+            }
+        };
+        
+        fetchProdutos();
+    }, [reload]);
+    
+    const listaPizzas = pizzas.map((pizza, index) =>
+        <li key={pizza.id || index}>{pizza.nome || pizza}</li>);
     return(
     <>
         <h3>Listagem de Produtos</h3>
-        <ul>
-            {listaPizzas}
-        </ul>
+        <p>Total de produtos: {pizzas.length}</p>
+        {pizzas.length === 0 ? (
+            <p>Nenhum produto encontrado</p>
+        ) : (
+            <ul>
+                {listaPizzas}
+            </ul>
+        )}
     </>
     )
 }
